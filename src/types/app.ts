@@ -20,3 +20,15 @@ export interface MovieListProps {
   path: string;
   coverType: "poster" | "backdrop";
 }
+
+// src/types.ts
+export type RootStackParamList = {
+  Home: undefined;
+  MovieDetail: { id: number };
+};
+
+export type RootTabParamList = {
+  HomeStack: undefined;
+  Search: undefined;
+  Favorite: undefined;
+};
