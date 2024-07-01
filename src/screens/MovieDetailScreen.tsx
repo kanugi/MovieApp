@@ -1,9 +1,23 @@
+// src/screens/MovieDetailScreen.tsx
+
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ScrollView,
+  Button,
+} from "react-native";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { getMovieDetails, Movie } from "../api/tmdbApi";
 import { RootStackParamList } from "../navigator/StackNavigator";
+import {
+  addFavorite,
+  removeFavorite,
+  checkIsFavorite,
+} from "../utils/favoriteUtils";
 
 type MovieDetailScreenRouteProp = RouteProp<RootStackParamList, "MovieDetail">;
 
@@ -15,6 +29,7 @@ type Props = {
 const MovieDetailScreen: React.FC<Props> = ({ route }) => {
   const { id } = route.params;
   const [movie, setMovie] = useState<Movie | null>(null);
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchMovie = async () => {
@@ -23,7 +38,26 @@ const MovieDetailScreen: React.FC<Props> = ({ route }) => {
     };
 
     fetchMovie();
+
+    const checkFavoriteStatus = async () => {
+      const favoriteStatus = await checkIsFavorite(id);
+      setIsFavorite(favoriteStatus);
+    };
+
+    checkFavoriteStatus();
   }, [id]);
+
+  const handleAddFavorite = async () => {
+    if (movie) {
+      await addFavorite(movie);
+      setIsFavorite(true);
+    }
+  };
+
+  const handleRemoveFavorite = async () => {
+    await removeFavorite(id);
+    setIsFavorite(false);
+  };
 
   if (!movie) {
     return (
@@ -45,6 +79,11 @@ const MovieDetailScreen: React.FC<Props> = ({ route }) => {
         Release Date: {movie.release_date}
       </Text>
       <Text style={styles.movieDetails}>Rating: {movie.vote_average}</Text>
+      {isFavorite ? (
+        <Button title="Remove from Favorites" onPress={handleRemoveFavorite} />
+      ) : (
+        <Button title="Add to Favorites" onPress={handleAddFavorite} />
+      )}
     </ScrollView>
   );
 };

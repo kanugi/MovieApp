@@ -1,4 +1,3 @@
-// src/api/tmdbApi.ts
 import axios from "axios";
 
 const API_KEY =
@@ -20,6 +19,11 @@ export interface Movie {
   overview: string;
   release_date: string;
   vote_average: number;
+}
+
+export interface Genre {
+  id: number;
+  name: string;
 }
 
 export interface MovieDetails extends Movie {}
@@ -73,5 +77,39 @@ export const getMovieDetails = async (
   } catch (error) {
     console.error(error);
     return null;
+  }
+};
+
+export const getMoviesByKeyword = async (keyword: string): Promise<Movie[]> => {
+  try {
+    const response = await api.get(
+      `/search/movie?query=${keyword}&language=en-US&page=1`
+    );
+    return response.data.results;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
+export const getGenres = async (): Promise<Genre[]> => {
+  try {
+    const response = await api.get("/genre/movie/list?language=en-US");
+    return response.data.genres;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
+export const getMoviesByGenre = async (genreId: number): Promise<Movie[]> => {
+  try {
+    const response = await api.get(
+      `/discover/movie?with_genres=${genreId}&language=en-US&page=1`
+    );
+    return response.data.results;
+  } catch (error) {
+    console.error(error);
+    return [];
   }
 };

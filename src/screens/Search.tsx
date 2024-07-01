@@ -1,5 +1,3 @@
-// src/screens/MovieList.tsx
-
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import KeywordSearch from "../components/search/KeywordSearch";
@@ -41,11 +39,14 @@ const Search = (): JSX.Element => {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+    backgroundColor: "#fff",
+    flex: 1,
   },
   topBarContainer: {
     display: "flex",
     flexDirection: "row",
     width: "100%",
+    marginBottom: 16,
   },
   topBar: {
     alignItems: "center",
